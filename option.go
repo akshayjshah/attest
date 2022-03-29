@@ -80,7 +80,7 @@ type cmpOption struct {
 }
 
 // Cmp configures the underlying equality assertion, if any. See the
-// github.com/google/go-cmp package documentation for an explanation of the
+// github.com/google/go-cmp/cmp package documentation for an explanation of the
 // default logic.
 //
 // In particular, note that the cmp package's default behavior is to panic when

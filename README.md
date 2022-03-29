@@ -61,14 +61,11 @@ Here's some example output from a failed assertion using `attest.Equal`:
           }
 ```
 
-## Installation, status, and support
-
-Install `attest` with `go get github.com/akshayjshah/attest@v0.1.1`. As you can
-see, the package is currently _unstable_. I hope to cut a stable 1.0 soon after
-the Go 1.19 release.
+## Status and support
 
 `attest` supports the [two most recent major releases][go-versions] of Go, with
-a minimum of Go 1.18.
+a minimum of Go 1.18. `attest` is currently _unstable_. I hope to cut a stable
+1.0 soon after the Go 1.19 release.
 
 ## Legal
 
