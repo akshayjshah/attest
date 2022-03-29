@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/akshayjshah/attest"
-	"github.com/stretchr/testify/assert"
 )
 
 type logTB struct{}
@@ -86,10 +85,11 @@ func ExampleOptions() {
 	)
 	// We can reuse our default options in each test. We can also specify more
 	// options without an ugly cascade of appends.
-	assert.Zero(
+	attest.Zero(
 		&logTB{}, // no testing.T in examples :(
 		point{},
 		defaults,       // our defaults
 		attest.Fatal(), // override Continue() from defaults
 	)
+	// Output:
 }
