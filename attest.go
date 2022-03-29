@@ -40,7 +40,7 @@ func Ok(tb TB, err error, opts ...Option) bool {
 	return t.Attest()
 }
 
-// Error asserts that the error is nil.
+// Error asserts that the error is not nil.
 func Error(tb TB, err error, opts ...Option) bool {
 	tb.Helper()
 	if err != nil {
