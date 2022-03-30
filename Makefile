@@ -27,9 +27,10 @@ build: ## Build all packages
 	$(GO) build ./...
 
 .PHONY: lint
-lint: $(BIN)/gofmt ## Lint Go
-	test -z "$$(./$(BIN)/gofmt -s -l . | tee /dev/stderr)"
+lint: $(BIN)/gofmt $(BIN)/staticcheck ## Lint Go
+	test -z "$$($(BIN)/gofmt -s -l . | tee /dev/stderr)"
 	$(GO) vet ./...
+	$(BIN)/staticcheck ./...
 
 .PHONY: lintfix
 lintfix: $(BIN)/gofmt ## Automatically fix some lint errors
@@ -46,3 +47,7 @@ clean: ## Remove intermediate artifacts
 $(BIN)/gofmt:
 	@mkdir -p $(@D)
 	$(GO) build -o $(@) cmd/gofmt
+
+$(BIN)/staticcheck:
+	@mkdir -p $(@D)
+	GOBIN=$(abspath $(@D)) $(GO) install honnef.co/go/tools/cmd/staticcheck@2022.1

@@ -130,14 +130,13 @@ func TestContains(t *testing.T) {
 }
 
 func TestAllow(t *testing.T) {
-	type pair struct {
-		first, second int
+	type foo struct {
+		bar int
 	}
 
-	var p pair
-	Zero(t, p, Allow(p))
-	var null *pair
-	Zero(t, null, Allow(pair{}))
+	NotZero(t, foo{1}, Allow(foo{}))
+	var null *foo
+	Zero(t, null, Allow(foo{}))
 }
 
 func TestComparer(t *testing.T) {

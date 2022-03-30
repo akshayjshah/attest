@@ -11,13 +11,13 @@ import (
 // It writes assertion failures to stdout.
 type logTB struct{}
 
-func (_ *logTB) Helper() {}
+func (*logTB) Helper() {}
 
-func (_ *logTB) Errorf(tmpl string, args ...any) {
+func (*logTB) Errorf(tmpl string, args ...any) {
 	fmt.Printf("ERROR: "+tmpl, args...)
 }
 
-func (_ *logTB) Fatalf(tmpl string, args ...any) {
+func (*logTB) Fatalf(tmpl string, args ...any) {
 	fmt.Printf("FATAL: "+tmpl, args...)
 }
 
