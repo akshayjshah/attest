@@ -40,7 +40,7 @@ func TestExample(t *testing.T) {
 
   var err error
   attest.Ok(t, err)
-  err = fmt.Errorf("read from HTTP body: %w", io.EOF)
+  err = fmt.Errorf("read config: %w", io.EOF)
   attest.Error(t, err)
   attest.ErrorIs(t, err, io.EOF)
 
