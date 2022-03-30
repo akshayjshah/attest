@@ -9,10 +9,11 @@ attest
 it uses [cmp] for equality testing and diffing. You may enjoy `attest` if you
 prefer:
 
+- Type safety: it's impossible to compare values with different types.
 - Brevity: assertions usually print diffs rather than full values.
+- Minimalism: just a few assertions, not a whole DSL.
 - Natural ordering: every assertion uses `got == want` order.
 - Interoperability: assertions work with any `cmp.Option`.
-- Minimalism: just a few assertions, not a whole DSL.
 
 ## An example
 
@@ -28,27 +29,31 @@ import (
 
 func TestExample(t *testing.T) {
   attest.Equal(t, 1, 1)
-  attest.Equal(t, int64(1), int(1)) // compiler error!
-
   attest.Approximately(
     t,
     time.Minute - 1, // got
     time.Minute,     // want
     time.Second,     // tolerance
   )
-  attest.Approximately(t, 0.99, 1.0, 0.2)
-  attest.Approximately(t, 9, 10, 0.5) // compiler error!
+  attest.Zero(t, "")
+  attest.Contains(t, []int{0, 1, 2}, 2)
 
-  err := fmt.Errorf("read from HTTP body: %w", io.EOF)
+  var err error
+  attest.Ok(t, err)
+  err = fmt.Errorf("read from HTTP body: %w", io.EOF)
   attest.Error(t, err)
   attest.ErrorIs(t, err, io.EOF)
 
-  attest.Zero(t, "")
-  attest.Contains(t, []int{0, 1, 2}, 2)
+  // You can enrich the default failure message.
+  attest.Equal(t, 1, 2, attest.Sprintf("integer %s", "addition"))
+
+  // The next two assertions won't compile.
+  attest.Equal(t, int64(1), int(1))
+  attest.Approximately(t, 9, 10, 0.5)
 }
 ```
 
-Here's some example output from a failed assertion using `attest.Equal`:
+Failed assertions usually print a diff. Here's an example using `attest.Equal`:
 
 ```
 --- FAIL: TestEqual (0.00s)
@@ -64,8 +69,8 @@ Here's some example output from a failed assertion using `attest.Equal`:
 ## Status and support
 
 `attest` supports the [two most recent major releases][go-versions] of Go, with
-a minimum of Go 1.18. `attest` is currently _unstable_. I hope to cut a stable
-1.0 soon after the Go 1.19 release.
+a minimum of Go 1.18. Its currently _unstable_, but I hope to cut a stable 1.0
+soon after the Go 1.19 release.
 
 ## Legal
 
