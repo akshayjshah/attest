@@ -51,11 +51,17 @@ func (m *mockTB) clear() {
 	m.out = ""
 }
 
+type point struct {
+	x, y int
+}
+
 func TestEqual(t *testing.T) {
 	Equal(t, 1, 1)
 
 	var mock mockTB
 	Equal(&mock, 1, 2)
+	mock.AssertFatal(t)
+	Equal(&mock, point{}, point{}) // unexported fields
 	mock.AssertFatal(t)
 }
 
@@ -87,7 +93,11 @@ func TestZero(t *testing.T) {
 	var mock mockTB
 	Zero(&mock, 3)
 	mock.AssertFatal(t)
+	Zero(&mock, point{}) // unexported fields
+	mock.AssertFatal(t)
 	NotZero(&mock, 0)
+	mock.AssertFatal(t)
+	NotZero(&mock, point{1, 1}) // unexported fields
 	mock.AssertFatal(t)
 }
 
@@ -127,16 +137,14 @@ func TestContains(t *testing.T) {
 	var mock mockTB
 	Contains(&mock, []int{0, 1}, 2)
 	mock.AssertFatal(t)
+	Contains(&mock, []point{{1, 1}}, point{1, 1}) // unexported fields
+	mock.AssertFatal(t)
 }
 
 func TestAllow(t *testing.T) {
-	type foo struct {
-		bar int
-	}
-
-	NotZero(t, foo{1}, Allow(foo{}))
-	var null *foo
-	Zero(t, null, Allow(foo{}))
+	Zero(t, point{}, Allow(point{}))
+	var null *point
+	Zero(t, null, Allow(point{}))
 }
 
 func TestComparer(t *testing.T) {

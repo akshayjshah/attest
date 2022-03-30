@@ -8,6 +8,7 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
+	"strings"
 
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/go-cmp/cmp/cmpopts"
@@ -17,7 +18,10 @@ import (
 func Equal[T any](tb TB, got, want T, opts ...Option) bool {
 	tb.Helper()
 	t := newAttester(tb, opts...)
-	diff := t.Diff(got, want)
+	diff, ok := t.Diff(got, want)
+	if !ok {
+		return t.Attest()
+	}
 	if diff == "" {
 		return true
 	}
@@ -59,9 +63,14 @@ func ErrorIs(tb TB, got, want error, opts ...Option) bool {
 		return true
 	}
 	t := newAttester(tb, Options(opts...), Cmp(cmpopts.EquateErrors()))
+	diff, ok := t.Diff(got, want)
+	if !ok {
+		// unreachable: EquateErrors guarantees diffing success
+		return t.Attest()
+	}
 	t.Printf("got doesn't wrap want")
 	t.Printf("diff (+got, -want):")
-	t.Printf(t.Diff(got, want))
+	t.Printf(diff)
 	return t.Attest()
 }
 
@@ -70,11 +79,14 @@ func Zero[T any](tb TB, got T, opts ...Option) bool {
 	tb.Helper()
 	var zero T
 	t := newAttester(tb, opts...)
-	diff := t.Diff(got, zero)
+	diff, ok := t.Diff(got, zero)
+	if !ok {
+		return t.Attest()
+	}
 	if diff == "" {
 		return true
 	}
-	t.Printf("got is non-zero")
+	t.Printf("got non-zero %T", got)
 	t.Printf("diff (+got, -zero):")
 	t.Printf(diff)
 	return t.Attest()
@@ -85,10 +97,14 @@ func NotZero[T any](tb TB, got T, opts ...Option) bool {
 	tb.Helper()
 	var zero T
 	t := newAttester(tb, opts...)
-	if !t.Equal(got, zero) {
+	equal, ok := t.Equal(got, zero)
+	if !ok {
+		return t.Attest()
+	}
+	if !equal {
 		return true
 	}
-	t.Printf("got is zero %T", got)
+	t.Printf("got zero %T", got)
 	return t.Attest()
 }
 
@@ -156,7 +172,11 @@ func Contains[T any](tb TB, got []T, want T, opts ...Option) bool {
 	tb.Helper()
 	t := newAttester(tb, opts...)
 	for _, v := range got {
-		if t.Equal(v, want) {
+		equal, ok := t.Equal(v, want)
+		if !ok {
+			return t.Attest()
+		}
+		if equal {
 			return true
 		}
 	}
@@ -196,12 +216,44 @@ func newAttester(tb TB, opts ...Option) *attester {
 	return t
 }
 
-func (t *attester) Equal(got, want any) bool {
-	return cmp.Equal(got, want, t.cmp...)
+func (t *attester) Equal(got, want any) (s bool, ok bool) {
+	defer func() {
+		if r := recover(); r != nil {
+			t.reportCmpPanic(r)
+			ok = false
+		}
+	}()
+	return cmp.Equal(got, want, t.cmp...), true
 }
 
-func (t *attester) Diff(got, want any) string {
-	return cmp.Diff(want, got, t.cmp...)
+func (t *attester) Diff(got, want any) (s string, ok bool) {
+	defer func() {
+		if r := recover(); r != nil {
+			t.reportCmpPanic(r)
+			ok = false
+		}
+	}()
+	return cmp.Diff(want, got, t.cmp...), true
+}
+
+func (t *attester) reportCmpPanic(r any) {
+	t.msg = "" // suppress user-supplied message
+	str, ok := r.(string)
+	if !ok {
+		t.Printf("panic in cmp: %v", r)
+		return
+	}
+	str = strings.TrimPrefix(str, "cannot handle unexported field at ")
+	headline, _, ok := strings.Cut(str, ":")
+	if !ok {
+		t.Printf("panic in cmp: %v", r)
+		return
+	}
+	t.Printf("found unexported field %s", headline)
+	t.Printf("If you control the type, implement an Equal method. Otherwise,")
+	t.Printf("  - Use attest.Allow or attest.Comparer,")
+	t.Printf("  - Use cmp.Exporter or protocmp.Transform, or ")
+	t.Printf("  - Use another cmp.Option from cmp, cmpopts, or a third-party package.")
 }
 
 func (t *attester) Printf(tmpl string, args ...any) {
