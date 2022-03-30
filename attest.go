@@ -209,6 +209,7 @@ type attester struct {
 }
 
 func newAttester(tb TB, opts ...Option) *attester {
+	tb.Helper()
 	t := &attester{tb: tb, fatal: true}
 	for _, opt := range opts {
 		opt.apply(t)

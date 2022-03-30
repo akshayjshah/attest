@@ -30,7 +30,7 @@ func ExampleAllow() {
 		&logTB{},
 		point{1.0, 1.0},
 		point{1.0, 1.0},
-		// Without Allow, the underlying cmp library panics because point has
+		// Without Allow, the underlying cmp library errors because point has
 		// unexported fields. We could also use Comparer, or we could implement an
 		// Equal method on point.
 		attest.Allow(point{}),
@@ -43,7 +43,7 @@ func ExampleComparer() {
 		&logTB{},
 		point{1.0, 1.0},
 		point{1.0, 1.0},
-		// Without Comparer, the underlying cmp library panics because point has
+		// Without Comparer, the underlying cmp library errors because point has
 		// unexported fields. We could also use Allow, or we could implement an
 		// Equal method on point.
 		attest.Comparer(func(left, right point) bool {

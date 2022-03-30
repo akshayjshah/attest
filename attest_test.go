@@ -145,6 +145,10 @@ func TestAllow(t *testing.T) {
 	Zero(t, point{}, Allow(point{}))
 	var null *point
 	Zero(t, null, Allow(point{}))
+
+	var mock mockTB
+	Zero(&mock, null, Allow([]int{}))
+	mock.AssertFatal(t)
 }
 
 func TestComparer(t *testing.T) {

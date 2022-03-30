@@ -2,6 +2,7 @@ package attest
 
 import (
 	"fmt"
+	"reflect"
 
 	"github.com/google/go-cmp/cmp"
 )
@@ -83,7 +84,7 @@ type cmpOption struct {
 // github.com/google/go-cmp/cmp package documentation for an explanation of the
 // default logic.
 //
-// In particular, note that the cmp package's default behavior is to panic when
+// In particular, note that the cmp package's default behavior is to error when
 // comparing structs with unexported fields. If you control the type in
 // question, implement an Equal method and cmp will use it by default. If you
 // don't control the type, use Allow or Comparer. If none of those approaches
@@ -92,21 +93,26 @@ type cmpOption struct {
 //
 // If you're comparing types generated from a Protocol Buffer schema,
 // google.golang.org/protobuf/testing/protocmp's Transform() option
-// safely transforms messages to a comparable, diffable type.
+// safely transforms them to a comparable, diffable type.
 func Cmp(opts ...cmp.Option) Option {
 	return &cmpOption{opts}
 }
 
 // Allow configures the underlying cmp package to forcibly introspect
-// unexported fields of the specified struct types. By default, cmp panics when
-// comparing structs with unexported fields. Allow panics if called with
-// anything other than a struct type (for example, a pointer or slice).
+// unexported fields of the specified struct types. (By default, cmp errors when
+// comparing structs with unexported fields.) Allow fails the test if called
+// with anything other than a struct type (for example, a pointer or slice).
 //
-// It's useful as a quick hack but is usually a bad idea: changes in the
+// Allow is useful as a quick hack but is usually a bad idea: changes in the
 // internals of some other package may break your tests. If you control the
 // type in question, implement an Equal method instead. If you don't control
 // the type, Comparer is usually safer.
 func Allow(types ...any) Option {
+	for _, typ := range types {
+		if rt := reflect.TypeOf(typ); rt.Kind() != reflect.Struct {
+			return errorOption(fmt.Sprintf("can't Allow non-struct type %T", typ))
+		}
+	}
 	return Cmp(cmp.AllowUnexported(types...))
 }
 
@@ -123,4 +129,13 @@ func Comparer[T any](equal func(T, T) bool) Option {
 
 func (o *cmpOption) apply(t *attester) {
 	t.cmp = append(t.cmp, o.cmp...)
+}
+
+type errorOption string
+
+func (o errorOption) apply(t *attester) {
+	t.tb.Helper()
+	t.msg = ""
+	t.Printf(string(o))
+	t.Attest()
 }
