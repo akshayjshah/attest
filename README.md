@@ -69,7 +69,7 @@ Failed assertions usually print a diff. Here's an example using `attest.Equal`:
 ## Status and support
 
 `attest` supports the [two most recent major releases][go-versions] of Go, with
-a minimum of Go 1.18. Its currently _unstable_, but I hope to cut a stable 1.0
+a minimum of Go 1.18. It's currently _unstable_, but I hope to cut a stable 1.0
 soon after the Go 1.19 release.
 
 ## Legal
