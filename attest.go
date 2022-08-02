@@ -146,8 +146,10 @@ func Panics(tb TB, f func(), opts ...Option) (ret bool) {
 }
 
 // Approximately asserts that got is within delta of want. For example,
-//   pi := float64(22)/7
-//   Approximately(t, pi, 3.14, 0.01)
+//
+//	pi := float64(22)/7
+//	Approximately(t, pi, 3.14, 0.01)
+//
 // asserts that our estimate of pi is between 3.13 and 3.15, exclusive.
 //
 // Approximately works with any type whose underlying type is numeric, so it
