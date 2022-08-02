@@ -65,6 +65,16 @@ func TestEqual(t *testing.T) {
 	mock.AssertFatal(t)
 }
 
+func TestNotEqual(t *testing.T) {
+	NotEqual(t, 2, 1)
+
+	var mock mockTB
+	NotEqual(&mock, 1, 1)
+	mock.AssertFatal(t)
+	Equal(&mock, point{1, 1}, point{1, 2}) // unexported fields
+	mock.AssertFatal(t)
+}
+
 func TestError(t *testing.T) {
 	Ok(t, nil)
 	var err error

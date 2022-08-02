@@ -29,6 +29,7 @@ import (
 
 func TestExample(t *testing.T) {
   attest.Equal(t, 1, 1)
+  attest.NotEqual(t, 2, 1)
   attest.Approximately(
     t,
     time.Minute - 1, // got

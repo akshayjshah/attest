@@ -31,6 +31,22 @@ func Equal[T any](tb TB, got, want T, opts ...Option) bool {
 	return t.Attest()
 }
 
+// NotEqual asserts that two values are not equal.
+func NotEqual[T any](tb TB, got, want T, opts ...Option) bool {
+	tb.Helper()
+	t := newAttester(tb, opts...)
+	equal, ok := t.Equal(got, want)
+	if !ok {
+		return t.Attest()
+	}
+	if !equal {
+		return true
+	}
+	t.Printf("got == want")
+	t.Printf("got: %v", got)
+	return t.Attest()
+}
+
 // Ok asserts that the error is nil.
 func Ok(tb TB, err error, opts ...Option) bool {
 	tb.Helper()
