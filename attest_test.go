@@ -151,6 +151,17 @@ func TestContains(t *testing.T) {
 	mock.AssertFatal(t)
 }
 
+func TestSubsequence(t *testing.T) {
+	Subsequence(t, "foobar", "oo")
+	Subsequence(t, []byte("foobar"), []byte("oo"))
+
+	var mock mockTB
+	Subsequence(&mock, "foobar", "ooo")
+	mock.AssertFatal(t)
+	Subsequence(&mock, []byte("foobar"), []byte("ooo"))
+	mock.AssertFatal(t)
+}
+
 func TestAllow(t *testing.T) {
 	Zero(t, point{}, Allow(point{}))
 	var null *point

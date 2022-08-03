@@ -198,7 +198,25 @@ func Contains[T any](tb TB, got []T, want T, opts ...Option) bool {
 			return true
 		}
 	}
-	t.Printf("%v not in slice", want)
+	t.Printf("got does not contain want")
+	t.Printf("got: %v", got)
+	t.Printf("want: %v", want)
+	return t.Attest()
+}
+
+// Subsequence asserts that got contains the subsequence want.
+//
+//	Subsequence(t, "hello world", "hello")
+//	Subsequence(t, []byte("deadbeef"), []byte("ee"))
+func Subsequence[T ~string | ~[]byte](tb TB, got, want T, opts ...Option) bool {
+	tb.Helper()
+	if bytes.Contains([]byte(got), []byte(want)) {
+		return true
+	}
+	t := newAttester(tb, opts...)
+	t.Printf("got does not contain want")
+	t.Printf("got: %v", got)
+	t.Printf("want: %v", want)
 	return t.Attest()
 }
 
