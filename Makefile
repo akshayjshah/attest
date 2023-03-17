@@ -50,4 +50,4 @@ $(BIN)/gofmt:
 
 $(BIN)/staticcheck:
 	@mkdir -p $(@D)
-	GOBIN=$(abspath $(@D)) $(GO) install honnef.co/go/tools/cmd/staticcheck@2022.1.3
+	GOBIN=$(abspath $(@D)) $(GO) install honnef.co/go/tools/cmd/staticcheck@latest
