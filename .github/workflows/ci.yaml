@@ -15,9 +15,6 @@ jobs:
     strategy:
       matrix:
         go-version: [oldstable, stable]
-        include:
-          - go: stable
-            latest: true
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
@@ -30,5 +27,5 @@ jobs:
       - name: Lint
         # Often, lint & gofmt guidelines depend on the Go version. To prevent
         # conflicting guidance, run only on the most recent supported version.
-        if: matrix.latest
+        if: matrix.go-version == 'stable'
         run: make lint
