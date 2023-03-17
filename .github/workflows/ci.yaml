@@ -14,9 +14,9 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        go-version: [1.18.x, 1.19.x]
+        go-version: [oldstable, stable]
         include:
-          - go: 1.19.x
+          - go: stable
             latest: true
     steps:
       - name: Checkout Code
@@ -25,12 +25,6 @@ jobs:
         uses: actions/setup-go@v4
         with:
           go-version: ${{ matrix.go-version }}
-      - name: Cache
-        uses: actions/cache@v3
-        with:
-          path: ~/go/pkg/mod
-          key: ${{ runner.os }}-connect-ci-${{ hashFiles('**/go.sum') }}
-          restore-keys: ${{ runner.os }}-connect-ci-
       - name: Test
         run: make test
       - name: Lint
