@@ -1,4 +1,4 @@
-module github.com/akshayjshah/attest
+module go.akshayshah.org/attest
 
 go 1.18
 

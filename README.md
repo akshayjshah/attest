@@ -2,8 +2,8 @@ attest
 ======
 
 [![Build](https://github.com/akshayjshah/attest/actions/workflows/ci.yaml/badge.svg?branch=main)](https://github.com/akshayjshah/attest/actions/workflows/ci.yaml)
-[![Report Card](https://goreportcard.com/badge/github.com/akshayjshah/attest)](https://goreportcard.com/report/github.com/akshayjshah/attest)
-[![GoDoc](https://pkg.go.dev/badge/github.com/akshayjshah/attest.svg)](https://pkg.go.dev/github.com/akshayjshah/attest)
+[![Report Card](https://goreportcard.com/badge/go.akshayshah.org/attest)](https://goreportcard.com/report/go.akshayshah.org/attest)
+[![GoDoc](https://pkg.go.dev/badge/go.akshayshah.org/attest.svg)](https://pkg.go.dev/go.akshayshah.org/attest)
 
 `attest` is a small package of type-safe assertion helpers. Under the hood,
 it uses [cmp] for equality testing and diffing. You may enjoy `attest` if you
@@ -15,7 +15,13 @@ prefer:
 - Natural ordering: every assertion uses `got == want` order.
 - Interoperability: assertions work with any `cmp.Option`.
 
-## An example
+## Installation
+
+```
+go get go.akshayshah.org/attest
+```
+
+## Usage
 
 ```go
 package main
@@ -67,15 +73,17 @@ Failed assertions usually print a diff. Here's an example using `attest.Equal`:
           }
 ```
 
-## Status and support
+## Status: Stable
 
-`attest` supports the [two most recent major releases][go-versions] of Go. It's
-currently _unstable_, but now that Go 1.19 is available I hope to cut a stable
-1.0 soon.
+This module is stable. It supports the [two most recent major
+releases][go-support-policy] of Go.
+
+Within those parameters, `connectproto` follows semantic versioning. No
+breaking changes will be made without incrementing the major version.
 
 ## Legal
 
-Offered under the [Apache 2 license][license].
+Offered under the [MIT license][license].
 
 [cmp]: https://pkg.go.dev/github.com/google/go-cmp/cmp
 [go-versions]: https://golang.org/doc/devel/release#policy
