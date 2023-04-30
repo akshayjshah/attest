@@ -86,5 +86,5 @@ breaking changes will be made without incrementing the major version.
 Offered under the [MIT license][license].
 
 [cmp]: https://pkg.go.dev/github.com/google/go-cmp/cmp
-[go-versions]: https://golang.org/doc/devel/release#policy
+[go-support-policy]: https://golang.org/doc/devel/release#policy
 [license]: https://github.com/akshayjshah/attest/blob/main/LICENSE
