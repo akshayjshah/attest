@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/akshayjshah/attest"
+	"go.akshayshah.org/attest"
 )
 
 // logTB implements the portions of the testing.TB interface that attest uses.
