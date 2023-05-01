@@ -1,7 +1,7 @@
 // Package attest is a small, type-safe library of assertion helpers.
 //
-// Under the hood, attest uses github.com/google/go-cmp/cmp to test equality
-// and diff values. All of attest's assertions work with any cmp.Option.
+// Under the hood, attest uses [cmp] to test equality and diff values. All of
+// attest's assertions work with any [cmp.Option].
 package attest
 
 import (
@@ -72,7 +72,7 @@ func Error(tb TB, err error, opts ...Option) bool {
 }
 
 // ErrorIs asserts that got wraps want, using the same logic as the standard
-// library's errors.Is.
+// library's [errors.Is].
 func ErrorIs(tb TB, got, want error, opts ...Option) bool {
 	tb.Helper()
 	if errors.Is(got, want) {
@@ -220,8 +220,8 @@ func Subsequence[T ~string | ~[]byte](tb TB, got, want T, opts ...Option) bool {
 	return t.Attest()
 }
 
-// A Number is any type whose underlying type is one of Go's built-in integer
-// or float types.
+// A Number is any type whose underlying type is one of Go's built-in integral
+// or floating-point types.
 type Number interface {
 	~uint | ~uint8 | ~uint16 | ~uint32 | ~uint64 | ~uintptr |
 		~int | ~int8 | ~int16 | ~int32 | ~int64 |
