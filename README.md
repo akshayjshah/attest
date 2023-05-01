@@ -78,7 +78,7 @@ Failed assertions usually print a diff. Here's an example using `attest.Equal`:
 This module is stable. It supports the [two most recent major
 releases][go-support-policy] of Go.
 
-Within those parameters, `connectproto` follows semantic versioning. No
+Within those parameters, `attest` follows semantic versioning. No
 breaking changes will be made without incrementing the major version.
 
 ## Legal
