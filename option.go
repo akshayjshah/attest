@@ -37,7 +37,7 @@ type msgOption struct {
 // make many similar assertions, the additional explanation may clarify the
 // test output.
 //
-// Arguments are passed to fmt.Sprintf for formatting.
+// Arguments are passed to [fmt.Sprintf] for formatting.
 func Sprintf(template string, args ...any) Option {
 	return &msgOption{fmt.Sprintf(template, args...)}
 }
@@ -46,7 +46,7 @@ func Sprintf(template string, args ...any) Option {
 // make many similar assertions, the additional explanation may clarify the
 // test output.
 //
-// Arguments are passed to fmt.Sprint for formatting.
+// Arguments are passed to [fmt.Sprint] for formatting.
 func Sprint(args ...any) Option {
 	return &msgOption{fmt.Sprint(args...)}
 }
@@ -61,7 +61,7 @@ type fatalOption struct {
 
 // Fatal stops the test immediately when an assertion fails. This is the
 // default behavior, but Fatal may still be useful to reverse the effect of
-// Continue.
+// [Continue].
 func Fatal() Option {
 	return &fatalOption{true}
 }
@@ -80,20 +80,21 @@ type cmpOption struct {
 	cmp []cmp.Option
 }
 
-// Cmp configures the underlying equality assertion, if any. See the
-// github.com/google/go-cmp/cmp package documentation for an explanation of the
-// default logic.
+// Cmp configures the underlying equality assertion, if any. See the [cmp]
+// package documentation for an explanation of the default logic.
 //
 // In particular, note that the cmp package's default behavior is to error when
 // comparing structs with unexported fields. If you control the type in
 // question, implement an Equal method and cmp will use it by default. If you
-// don't control the type, use Allow or Comparer. If none of those approaches
-// fit your needs, cmp and its cmpopts subpackage offer many other ways to
+// don't control the type, use [Allow] or [Comparer]. If none of those approaches
+// fit your needs, [cmp] and its [cmpopts] subpackage offer many other ways to
 // relax this safety check.
 //
 // If you're comparing types generated from a Protocol Buffer schema,
-// google.golang.org/protobuf/testing/protocmp's Transform() option
-// safely transforms them to a comparable, diffable type.
+// [protocmp.Transform] safely transforms them to a comparable, diffable type.
+//
+// [protocmp.Transform]: https://pkg.go.dev/google.golang.org/protobuf/testing/protocmp#Transform
+// [cmpopts]: https://pkg.go.dev/github.com/google/go-cmp/cmp/cmpopts
 func Cmp(opts ...cmp.Option) Option {
 	return &cmpOption{opts}
 }
@@ -106,7 +107,7 @@ func Cmp(opts ...cmp.Option) Option {
 // Allow is useful as a quick hack but is usually a bad idea: changes in the
 // internals of some other package may break your tests. If you control the
 // type in question, implement an Equal method instead. If you don't control
-// the type, Comparer is usually safer.
+// the type, [Comparer] is usually safer.
 func Allow(types ...any) Option {
 	for _, typ := range types {
 		if rt := reflect.TypeOf(typ); rt.Kind() != reflect.Struct {

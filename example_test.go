@@ -7,7 +7,7 @@ import (
 	"go.akshayshah.org/attest"
 )
 
-// logTB implements the portions of the testing.TB interface that attest uses.
+// logTB implements the portions of the [testing.TB] interface that attest uses.
 // It writes assertion failures to stdout.
 type logTB struct{}
 
@@ -30,9 +30,8 @@ func ExampleAllow() {
 		&logTB{},
 		point{1.0, 1.0},
 		point{1.0, 1.0},
-		// Without Allow, the underlying cmp library errors because point has
-		// unexported fields. We could also use Comparer, or we could implement an
-		// Equal method on point.
+		// Without Allow, cmp errors because point has unexported fields. We could
+		// also use [Comparer], or we could implement an Equal method on point.
 		attest.Allow(point{}),
 	)
 	// Output:
@@ -43,9 +42,8 @@ func ExampleComparer() {
 		&logTB{},
 		point{1.0, 1.0},
 		point{1.0, 1.0},
-		// Without Comparer, the underlying cmp library errors because point has
-		// unexported fields. We could also use Allow, or we could implement an
-		// Equal method on point.
+		// Without Comparer, cmp errors because point has unexported fields. We
+		// could also use [Allow], or we could implement an Equal method on point.
 		attest.Comparer(func(left, right point) bool {
 			return left.x == right.x && left.y == right.y
 		}),
@@ -92,7 +90,7 @@ func ExampleOptions() {
 		&logTB{},
 		point{},
 		defaults,       // our defaults
-		attest.Fatal(), // override Continue() from defaults
+		attest.Fatal(), // override Continue from defaults
 	)
 	// Output:
 }
