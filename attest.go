@@ -55,7 +55,7 @@ func Ok(tb TB, err error, opts ...Option) bool {
 	}
 	t := newAttester(tb, opts...)
 	t.Printf("unexpected error")
-	t.Printf("error: %v", err)
+	t.Printf("error: %+v", err)
 	t.Printf("type: %T", err)
 	return t.Attest()
 }
