@@ -51,6 +51,22 @@ func (m *mockTB) clear() {
 	m.out = ""
 }
 
+type formattedError struct {
+	msg string
+}
+
+func (e *formattedError) Error() string {
+	return e.msg
+}
+
+func (e *formattedError) Format(f fmt.State, verb rune) {
+	if verb == 'v' && f.Flag('+') {
+		io.WriteString(f, "formatted: "+e.msg)
+	} else {
+		io.WriteString(f, e.msg)
+	}
+}
+
 type point struct {
 	x, y int
 }
@@ -88,6 +104,11 @@ func TestError(t *testing.T) {
 	Error(&mock, nil)
 	mock.AssertFatal(t)
 	ErrorIs(&mock, fmt.Errorf("something: %v", io.EOF), io.EOF)
+	mock.AssertFatal(t)
+
+	ferr := &formattedError{"fail"}
+	Ok(&mock, ferr)
+	Subsequence(t, mock.out, "error: formatted: fail")
 	mock.AssertFatal(t)
 }
 
